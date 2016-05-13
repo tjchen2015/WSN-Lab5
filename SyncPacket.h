@@ -9,8 +9,10 @@ enum {
 };
 
 typedef nx_struct SyncPacketMsg {
-  nx_uint16_t nodeid;
-  nx_uint16_t counter;
+  nx_uint8_t node_id;
+  nx_uint8_t type;
+  nx_uint32_t sync_id;
+  nx_uint32_t timestamp;
 } SyncPacketMsg;
 
 #endif

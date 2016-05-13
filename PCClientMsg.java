@@ -7,12 +7,12 @@
 public class PCClientMsg extends net.tinyos.message.Message {
 
     /** The default size of this message type in bytes. */
-    public static final int DEFAULT_MESSAGE_SIZE = 4;
+    public static final int DEFAULT_MESSAGE_SIZE = 10;
 
     /** The Active Message type associated with this message. */
     public static final int AM_TYPE = 6;
 
-    /** Create a new PCClientMsg of size 4. */
+    /** Create a new PCClientMsg of size 10. */
     public PCClientMsg() {
         super(DEFAULT_MESSAGE_SIZE);
         amTypeSet(AM_TYPE);
@@ -85,10 +85,16 @@ public class PCClientMsg extends net.tinyos.message.Message {
     public String toString() {
       String s = "Message <PCClientMsg> \n";
       try {
-        s += "  [nodeid=0x"+Long.toHexString(get_nodeid())+"]\n";
+        s += "  [node_id=0x"+Long.toHexString(get_node_id())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [counter=0x"+Long.toHexString(get_counter())+"]\n";
+        s += "  [type=0x"+Long.toHexString(get_type())+"]\n";
+      } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
+      try {
+        s += "  [sync_id=0x"+Long.toHexString(get_sync_id())+"]\n";
+      } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
+      try {
+        s += "  [timestamp=0x"+Long.toHexString(get_timestamp())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       return s;
     }
@@ -96,129 +102,255 @@ public class PCClientMsg extends net.tinyos.message.Message {
     // Message-type-specific access methods appear below.
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: nodeid
-    //   Field type: int, unsigned
+    // Accessor methods for field: node_id
+    //   Field type: short, unsigned
     //   Offset (bits): 0
-    //   Size (bits): 16
+    //   Size (bits): 8
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'nodeid' is signed (false).
+     * Return whether the field 'node_id' is signed (false).
      */
-    public static boolean isSigned_nodeid() {
+    public static boolean isSigned_node_id() {
         return false;
     }
 
     /**
-     * Return whether the field 'nodeid' is an array (false).
+     * Return whether the field 'node_id' is an array (false).
      */
-    public static boolean isArray_nodeid() {
+    public static boolean isArray_node_id() {
         return false;
     }
 
     /**
-     * Return the offset (in bytes) of the field 'nodeid'
+     * Return the offset (in bytes) of the field 'node_id'
      */
-    public static int offset_nodeid() {
+    public static int offset_node_id() {
         return (0 / 8);
     }
 
     /**
-     * Return the offset (in bits) of the field 'nodeid'
+     * Return the offset (in bits) of the field 'node_id'
      */
-    public static int offsetBits_nodeid() {
+    public static int offsetBits_node_id() {
         return 0;
     }
 
     /**
-     * Return the value (as a int) of the field 'nodeid'
+     * Return the value (as a short) of the field 'node_id'
      */
-    public int get_nodeid() {
-        return (int)getUIntBEElement(offsetBits_nodeid(), 16);
+    public short get_node_id() {
+        return (short)getUIntBEElement(offsetBits_node_id(), 8);
     }
 
     /**
-     * Set the value of the field 'nodeid'
+     * Set the value of the field 'node_id'
      */
-    public void set_nodeid(int value) {
-        setUIntBEElement(offsetBits_nodeid(), 16, value);
+    public void set_node_id(short value) {
+        setUIntBEElement(offsetBits_node_id(), 8, value);
     }
 
     /**
-     * Return the size, in bytes, of the field 'nodeid'
+     * Return the size, in bytes, of the field 'node_id'
      */
-    public static int size_nodeid() {
-        return (16 / 8);
+    public static int size_node_id() {
+        return (8 / 8);
     }
 
     /**
-     * Return the size, in bits, of the field 'nodeid'
+     * Return the size, in bits, of the field 'node_id'
      */
-    public static int sizeBits_nodeid() {
-        return 16;
+    public static int sizeBits_node_id() {
+        return 8;
     }
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: counter
-    //   Field type: int, unsigned
+    // Accessor methods for field: type
+    //   Field type: short, unsigned
+    //   Offset (bits): 8
+    //   Size (bits): 8
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'type' is signed (false).
+     */
+    public static boolean isSigned_type() {
+        return false;
+    }
+
+    /**
+     * Return whether the field 'type' is an array (false).
+     */
+    public static boolean isArray_type() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'type'
+     */
+    public static int offset_type() {
+        return (8 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'type'
+     */
+    public static int offsetBits_type() {
+        return 8;
+    }
+
+    /**
+     * Return the value (as a short) of the field 'type'
+     */
+    public short get_type() {
+        return (short)getUIntBEElement(offsetBits_type(), 8);
+    }
+
+    /**
+     * Set the value of the field 'type'
+     */
+    public void set_type(short value) {
+        setUIntBEElement(offsetBits_type(), 8, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'type'
+     */
+    public static int size_type() {
+        return (8 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'type'
+     */
+    public static int sizeBits_type() {
+        return 8;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: sync_id
+    //   Field type: long, unsigned
     //   Offset (bits): 16
-    //   Size (bits): 16
+    //   Size (bits): 32
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'counter' is signed (false).
+     * Return whether the field 'sync_id' is signed (false).
      */
-    public static boolean isSigned_counter() {
+    public static boolean isSigned_sync_id() {
         return false;
     }
 
     /**
-     * Return whether the field 'counter' is an array (false).
+     * Return whether the field 'sync_id' is an array (false).
      */
-    public static boolean isArray_counter() {
+    public static boolean isArray_sync_id() {
         return false;
     }
 
     /**
-     * Return the offset (in bytes) of the field 'counter'
+     * Return the offset (in bytes) of the field 'sync_id'
      */
-    public static int offset_counter() {
+    public static int offset_sync_id() {
         return (16 / 8);
     }
 
     /**
-     * Return the offset (in bits) of the field 'counter'
+     * Return the offset (in bits) of the field 'sync_id'
      */
-    public static int offsetBits_counter() {
+    public static int offsetBits_sync_id() {
         return 16;
     }
 
     /**
-     * Return the value (as a int) of the field 'counter'
+     * Return the value (as a long) of the field 'sync_id'
      */
-    public int get_counter() {
-        return (int)getUIntBEElement(offsetBits_counter(), 16);
+    public long get_sync_id() {
+        return (long)getUIntBEElement(offsetBits_sync_id(), 32);
     }
 
     /**
-     * Set the value of the field 'counter'
+     * Set the value of the field 'sync_id'
      */
-    public void set_counter(int value) {
-        setUIntBEElement(offsetBits_counter(), 16, value);
+    public void set_sync_id(long value) {
+        setUIntBEElement(offsetBits_sync_id(), 32, value);
     }
 
     /**
-     * Return the size, in bytes, of the field 'counter'
+     * Return the size, in bytes, of the field 'sync_id'
      */
-    public static int size_counter() {
-        return (16 / 8);
+    public static int size_sync_id() {
+        return (32 / 8);
     }
 
     /**
-     * Return the size, in bits, of the field 'counter'
+     * Return the size, in bits, of the field 'sync_id'
      */
-    public static int sizeBits_counter() {
-        return 16;
+    public static int sizeBits_sync_id() {
+        return 32;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: timestamp
+    //   Field type: long, unsigned
+    //   Offset (bits): 48
+    //   Size (bits): 32
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'timestamp' is signed (false).
+     */
+    public static boolean isSigned_timestamp() {
+        return false;
+    }
+
+    /**
+     * Return whether the field 'timestamp' is an array (false).
+     */
+    public static boolean isArray_timestamp() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'timestamp'
+     */
+    public static int offset_timestamp() {
+        return (48 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'timestamp'
+     */
+    public static int offsetBits_timestamp() {
+        return 48;
+    }
+
+    /**
+     * Return the value (as a long) of the field 'timestamp'
+     */
+    public long get_timestamp() {
+        return (long)getUIntBEElement(offsetBits_timestamp(), 32);
+    }
+
+    /**
+     * Set the value of the field 'timestamp'
+     */
+    public void set_timestamp(long value) {
+        setUIntBEElement(offsetBits_timestamp(), 32, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'timestamp'
+     */
+    public static int size_timestamp() {
+        return (32 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'timestamp'
+     */
+    public static int sizeBits_timestamp() {
+        return 32;
     }
 
 }
