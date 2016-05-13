@@ -27,9 +27,9 @@ implementation
   event void Timer0.fired()
   {
     if(!busy){
-      SyncPacketMsg* btrpkt = (SyncPacketMsg*)(call SerialPacket.getPayload(&pkt, sizeof (SyncPacketMsg)));
-      btrpkt -> nodeid = TOS_NODE_ID;
-      btrpkt-> counter = counter;
+      SyncPacketMsg* syncPacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&pkt, sizeof (SyncPacketMsg)));
+      syncPacket -> node_id = NODE_ID;
+      syncPacket-> sync_id = counter;
       if(call SerialAMSend.send(AM_BROADCAST_ADDR, &pkt, sizeof(SyncPacketMsg)) == SUCCESS){
         busy = TRUE;
       }
@@ -50,8 +50,8 @@ implementation
 
   event message_t * SerialReceive.receive(message_t *msg, void *payload, uint8_t len){
     if(len == sizeof(SyncPacketMsg)){
-      SyncPacketMsg* btrpkt = (SyncPacketMsg*)payload;
-      call Leds.set(btrpkt->counter);
+      SyncPacketMsg* syncPacket = (SyncPacketMsg*)payload;
+      call Leds.set(syncPacket->sync_id);
     }
     return msg;
   }
