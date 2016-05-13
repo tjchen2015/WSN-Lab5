@@ -6,8 +6,9 @@ implementation
   components MainC, SenderC, LedsC;
   components new TimerMilliC() as Timer0;
   
-  //Serial
-  components SerialActiveMessageC;
+  //Radio
+  components ActiveMessageC;
+  components new AMSenderC(AM_SYNCPACKETMSG);
 
 
   SenderC -> MainC.Boot;
@@ -15,9 +16,10 @@ implementation
   SenderC.Timer0 -> Timer0;
   SenderC.Leds -> LedsC;
   
-  //Serial define
-  SenderC.SerialControl -> SerialActiveMessageC;
-  SenderC.SerialAMSend -> SerialActiveMessageC.AMSend[AM_SYNCPACKETMSG];
-  SenderC.SerialPacket -> SerialActiveMessageC;
+  //Radio define
+  SenderC.Packet -> AMSenderC;
+  SenderC.AMPacket -> AMSenderC;
+  SenderC.AMSend -> AMSenderC;
+  SenderC.AMControl -> ActiveMessageC;
 }
 

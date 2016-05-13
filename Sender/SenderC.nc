@@ -9,10 +9,11 @@ module SenderC @safe()
   uses interface Leds;
   uses interface Boot;
 
-  //Serial define
-  uses interface SplitControl as SerialControl;
-  uses interface AMSend as SerialAMSend;
-  uses interface Packet as SerialPacket;
+  //Radio define
+  uses interface Packet;
+  uses interface AMPacket;
+  uses interface AMSend;
+  uses interface SplitControl as AMControl;
 }
 implementation
 {
@@ -22,35 +23,35 @@ implementation
 
   event void Boot.booted()
   {
-    call SerialControl.start();
+    call AMControl.start();
   }
 
   event void Timer0.fired()
   {
     if(!busy){
-      SyncPacketMsg* syncPacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&pkt, sizeof (SyncPacketMsg)));
+      SyncPacketMsg* syncPacket = (SyncPacketMsg*)(call Packet.getPayload(&pkt, sizeof (SyncPacketMsg)));
       syncPacket -> node_id = NODE_ID;
       syncPacket -> type = 1;
       syncPacket -> sync_id = counter;
-      if(call SerialAMSend.send(AM_BROADCAST_ADDR, &pkt, sizeof(SyncPacketMsg)) == SUCCESS){
+      if(call AMSend.send(AM_BROADCAST_ADDR, &pkt, sizeof(SyncPacketMsg)) == SUCCESS){
         busy = TRUE;
       }
     }
   }
 
-  event void SerialControl.startDone(error_t error){
+  event void AMControl.startDone(error_t error){
     if (error == SUCCESS){
       call Timer0.startPeriodic(TIMER_PERIOD_MILLI);
     }
     else{
-      call SerialControl.start();
+      call AMControl.start();
     }
   }
 
-  event void SerialControl.stopDone(error_t error){
+  event void AMControl.stopDone(error_t error){
   }
 
-  event void SerialAMSend.sendDone(message_t *msg, error_t error){
+  event void AMSend.sendDone(message_t *msg, error_t error){
     if(&pkt == msg){
       busy = FALSE;
       counter++;
