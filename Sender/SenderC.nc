@@ -1,6 +1,8 @@
 #include "Timer.h"
 #include "../SyncPacket.h"
 
+#define NODE_ID 3
+
 module SenderC @safe()
 {
   uses interface Timer<TMilli> as Timer0;
@@ -9,7 +11,6 @@ module SenderC @safe()
 
   //Serial define
   uses interface SplitControl as SerialControl;
-  uses interface Receive as SerialReceive;
   uses interface AMSend as SerialAMSend;
   uses interface Packet as SerialPacket;
 }
@@ -29,7 +30,8 @@ implementation
     if(!busy){
       SyncPacketMsg* syncPacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&pkt, sizeof (SyncPacketMsg)));
       syncPacket -> node_id = NODE_ID;
-      syncPacket-> sync_id = counter;
+      syncPacket -> type = 1;
+      syncPacket -> sync_id = counter;
       if(call SerialAMSend.send(AM_BROADCAST_ADDR, &pkt, sizeof(SyncPacketMsg)) == SUCCESS){
         busy = TRUE;
       }
@@ -46,14 +48,6 @@ implementation
   }
 
   event void SerialControl.stopDone(error_t error){
-  }
-
-  event message_t * SerialReceive.receive(message_t *msg, void *payload, uint8_t len){
-    if(len == sizeof(SyncPacketMsg)){
-      SyncPacketMsg* syncPacket = (SyncPacketMsg*)payload;
-      call Leds.set(syncPacket->sync_id);
-    }
-    return msg;
   }
 
   event void SerialAMSend.sendDone(message_t *msg, error_t error){

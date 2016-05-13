@@ -17,7 +17,6 @@ implementation
   
   //Serial define
   SenderC.SerialControl -> SerialActiveMessageC;
-  SenderC.SerialReceive -> SerialActiveMessageC.Receive[AM_SYNCPACKETMSG];
   SenderC.SerialAMSend -> SerialActiveMessageC.AMSend[AM_SYNCPACKETMSG];
   SenderC.SerialPacket -> SerialActiveMessageC;
 }
