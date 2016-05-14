@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include "../SyncPacket.h"
 
-module ReceiverC @safe()
+module SenderC @safe()
 {
   uses interface LocalTime<TMilli> as LocalTime0;
   uses interface Timer<TMilli> as Timer0;

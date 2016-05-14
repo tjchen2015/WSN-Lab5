@@ -11,6 +11,7 @@ implementation
   components ActiveMessageC;
   components new AMSenderC(AM_SYNCPACKETMSG);
   components new AMReceiverC(AM_SYNCPACKETMSG);
+  components SerialActiveMessageC;
 
 
   ReceiverC -> MainC.Boot;
@@ -25,5 +26,12 @@ implementation
   ReceiverC.LocalTime0 -> LocalTimeMilliC;
   ReceiverC.AMReceive -> AMReceiverC;
   ReceiverC.Timer0 -> Timer0;
+  //Serial define
+  ReceiverC.SerialControl -> SerialActiveMessageC;
+  ReceiverC.SerialReceive -> SerialActiveMessageC.Receive[AM_SYNCPACKETMSG];
+  ReceiverC.SerialAMSend -> SerialActiveMessageC.AMSend[AM_SYNCPACKETMSG];
+  ReceiverC.SerialPacket -> SerialActiveMessageC;
 }
+
+
 
