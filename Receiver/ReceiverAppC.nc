@@ -13,6 +13,7 @@ implementation
   components new AMReceiverC(AM_SYNCPACKETMSG);
   //Serial
   components SerialActiveMessageC;
+  components BusyWaitMicroC;
 
 
   ReceiverC -> MainC.Boot;
@@ -20,7 +21,8 @@ implementation
   //ReceiverC.Timer0 -> Timer0;
   ReceiverC.LocalTime0 -> LocalTimeMilliC;
   ReceiverC.Leds -> LedsC;
-  
+  ReceiverC.BusyWait -> BusyWaitMicroC;
+
   //Radio define
   ReceiverC.RadioPacket -> AMSenderC;
   ReceiverC.RadioAMPacket -> AMSenderC;

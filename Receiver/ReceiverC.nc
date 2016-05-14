@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include "../SyncPacket.h"
 
-#define NODE_ID 2
+#define NODE_ID 1
 
 module ReceiverC @safe()
 {
@@ -9,6 +9,7 @@ module ReceiverC @safe()
   uses interface LocalTime<TMilli> as LocalTime0;
   uses interface Leds;
   uses interface Boot;
+  uses interface BusyWait<TMicro, typeof(uint16_t)>;
 
   //Radio define
   uses interface Packet as RadioPacket;
@@ -72,7 +73,7 @@ implementation
           broadcastPacket -> type = 2;
           broadcastPacket -> sync_id = syncPacket -> sync_id;//??????
           broadcastPacket -> timestamp = call LocalTime0.get();
-
+          call BusyWait.wait(6000000);
           if(call RadioAMSend.send(AM_BROADCAST_ADDR, &radioPacket, sizeof(SyncPacketMsg)) == SUCCESS){
             radioBusy = TRUE;
             call Leds.led0Toggle();
