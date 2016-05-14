@@ -7,14 +7,16 @@ import net.tinyos.util.*;
 
 public class PCClient implements MessageListener {
 
-  private MoteIF moteIF;
+  private MoteIF moteIF1, moteIF2;
   public short node_id = 4;
   public short packet_type = 3;
   public PCClientMsg msg1, msg2;
   
-  public PCClient(MoteIF moteIF) {
-    this.moteIF = moteIF;
-    this.moteIF.registerListener(new PCClientMsg(), this);
+  public PCClient(MoteIF moteIF1, MoteIF moteIF2) {
+    this.moteIF1 = moteIF1;
+    this.moteIF2 = moteIF2;
+    this.moteIF1.registerListener(new PCClientMsg(), this);
+    this.moteIF2.registerListener(new PCClientMsg(), this);
   }
 
   public void requestNodeTime() {
@@ -37,7 +39,8 @@ public class PCClient implements MessageListener {
     try {
   		payload.set_node_id(node_id);
       payload.set_type(packet_type);
-  		moteIF.send(0, payload);
+  		moteIF1.send(1, payload);
+      moteIF2.send(2, payload);
     }
     catch (IOException exception) {
       System.err.println("Exception thrown when sending packets. Exiting.");
@@ -67,30 +70,35 @@ public class PCClient implements MessageListener {
   }
   
   public static void main(String[] args) throws Exception {
-    String source = null;
-    if (args.length == 2) {
+    String source1 = null;
+    String source2 = null;
+    if (args.length == 3) {
       if (!args[0].equals("-comm")) {
         usage();
         System.exit(1);
       }
-      source = args[1];
+      source1 = args[1];
+      source2 = args[2];
     }
     else if (args.length != 0) {
       usage();
       System.exit(1);
     }
     
-    PhoenixSource phoenix;
+    PhoenixSource phoenix1, phoenix2;
     
-    if (source == null) {
-      phoenix = BuildSource.makePhoenix(PrintStreamMessenger.err);
+    if (source1==null || source2==null) {
+      phoenix1 = BuildSource.makePhoenix(PrintStreamMessenger.err);
+      phoenix2 = BuildSource.makePhoenix(PrintStreamMessenger.err);
     }
     else {
-      phoenix = BuildSource.makePhoenix(source, PrintStreamMessenger.err);
+      phoenix1 = BuildSource.makePhoenix(source1, PrintStreamMessenger.err);
+      phoenix2 = BuildSource.makePhoenix(source2, PrintStreamMessenger.err);
     }
 
-    MoteIF mif = new MoteIF(phoenix);
-    PCClient serial = new PCClient(mif);
+    MoteIF mif1 = new MoteIF(phoenix1);
+    MoteIF mif2 = new MoteIF(phoenix2);
+    PCClient serial = new PCClient(mif1, mif2);
     serial.requestNodeTime();
   }
 }
