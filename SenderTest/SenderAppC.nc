@@ -9,6 +9,7 @@ implementation
   //Radio
   components ActiveMessageC;
   components new AMSenderC(AM_SYNCPACKETMSG);
+  components new AMReceiverC(AM_SYNCPACKETMSG);
 
 
   SenderC -> MainC.Boot;
@@ -21,5 +22,6 @@ implementation
   SenderC.AMPacket -> AMSenderC;
   SenderC.AMSend -> AMSenderC;
   SenderC.AMControl -> ActiveMessageC;
+  SenderC.RadioReceive -> AMReceiverC;
 }
 

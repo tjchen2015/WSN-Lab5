@@ -4,7 +4,7 @@ configuration ReceiverAppC
 implementation
 {
   components MainC, ReceiverC, LedsC;
-  //components new TimerMilliC() as Timer0;
+  components new TimerMilliC() as Timer0;
   components LocalTimeMilliC;
   
   //Radio
@@ -18,7 +18,7 @@ implementation
 
   ReceiverC -> MainC.Boot;
 
-  //ReceiverC.Timer0 -> Timer0;
+  ReceiverC.Timer0 -> Timer0;
   ReceiverC.LocalTime0 -> LocalTimeMilliC;
   ReceiverC.Leds -> LedsC;
   ReceiverC.BusyWait -> BusyWaitMicroC;

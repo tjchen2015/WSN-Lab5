@@ -1,11 +1,9 @@
 #include "Timer.h"
 #include "../SyncPacket.h"
 
-#define NODE_ID 1
-
 module ReceiverC @safe()
 {
-  //uses interface Timer<TMilli> as Timer0;
+  uses interface Timer<TMilli> as Timer0;
   uses interface LocalTime<TMilli> as LocalTime0;
   uses interface Leds;
   uses interface Boot;
@@ -66,27 +64,33 @@ implementation
       SyncPacketMsg* syncPacket = (SyncPacketMsg*)payload;
 
       if(syncPacket->type == 1){
-        if(!radioBusy){
-          SyncPacketMsg* broadcastPacket = (SyncPacketMsg*)(call RadioPacket.getPayload(&radioPacket, sizeof (SyncPacketMsg)));
-          call Leds.led2Toggle();
-          broadcastPacket -> node_id = NODE_ID;
-          broadcastPacket -> type = 2;
-          broadcastPacket -> sync_id = syncPacket -> sync_id;//??????
-          broadcastPacket -> timestamp = call LocalTime0.get();
-          call BusyWait.wait(6000000);
-          if(call RadioAMSend.send(AM_BROADCAST_ADDR, &radioPacket, sizeof(SyncPacketMsg)) == SUCCESS){
-            radioBusy = TRUE;
-            call Leds.led0Toggle();
-          }
-        }
+        SyncPacketMsg* broadcastPacket = (SyncPacketMsg*)(call RadioPacket.getPayload(&radioPacket, sizeof (SyncPacketMsg)));
+        call Leds.led2Toggle();
+        broadcastPacket -> node_id = TOS_NODE_ID;
+        broadcastPacket -> type = 2;
+        broadcastPacket -> sync_id = syncPacket -> sync_id;//??????
+        broadcastPacket -> timestamp = call LocalTime0.get();
+
+        call Timer0.startPeriodic(TOS_NODE_ID * 2000);
+        call Leds.led1Toggle();
       }
       else if(syncPacket->type == 2){
-        call Leds.led1Toggle();
-        save(syncPacket);
+        call Leds.led3Toggle();
+        // save(syncPacket);
       }
     }
 
     return msg;
+  }
+
+  event void Timer0.fired(){
+    if(!radioBusy){
+      if(call RadioAMSend.send(AM_BROADCAST_ADDR, &radioPacket, sizeof(SyncPacketMsg)) == SUCCESS){
+        radioBusy = TRUE;
+        call Leds.led0Toggle();
+        call Timer0.stop();
+      }
+    }
   }
 
   void doLinearRegression(double x[], double y[], int len, double * slope, double * intercept) {
@@ -125,8 +129,8 @@ implementation
     for (i = (sync_id_now[node_id - 1] + 1) % CACHED_SYNC_PACKET_NUM, counter = 0;
         counter < 30;
         counter += 1, i = (i + 1) % CACHED_SYNC_PACKET_NUM) {
-      x[counter] = sync_packet_storage[NODE_ID][i];
-      y[counter] = sync_packet_storage[node_id - 1][i] - sync_packet_storage[NODE_ID][i];
+      x[counter] = sync_packet_storage[TOS_NODE_ID][i];
+      y[counter] = sync_packet_storage[node_id - 1][i] - sync_packet_storage[TOS_NODE_ID][i];
     }
     
     doLinearRegression(x, y, CACHED_SYNC_PACKET_NUM, &slope, &intercept);
@@ -142,7 +146,7 @@ implementation
     uint32_t max_time = 0;
     uint32_t our_time = call LocalTime0.get();
     for (i = 0; i < MAX_NEIGHBOR_NUM; i += 1) {
-      if (i+1 == NODE_ID) continue;
+      if (i+1 == TOS_NODE_ID) continue;
       tmp = getTimestampForNode(i, our_time);
       if (tmp > max_time) {
         max_time = tmp;
@@ -154,14 +158,14 @@ implementation
   event message_t * SerialReceive.receive(message_t *msg, void *payload, uint8_t len){
     if(len == sizeof(SyncPacketMsg)){
       SyncPacketMsg* requestPacket = (SyncPacketMsg*)payload;
-
+      call Leds.led3Toggle();
       if(requestPacket->node_id==4 && requestPacket->type==3){//check node id????
         if(!serialBusy){
           SyncPacketMsg* timePacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&serialPacket, sizeof (SyncPacketMsg)));
           call Leds.led3Toggle();
-          timePacket -> node_id = NODE_ID;
+          timePacket -> node_id = TOS_NODE_ID;
           timePacket -> type = 3;
-          timePacket -> timestamp = getTimestamp();//????????
+          timePacket -> timestamp = 6;//????????
           if(call SerialAMSend.send(AM_BROADCAST_ADDR, &serialPacket, sizeof(SyncPacketMsg)) == SUCCESS){
             serialBusy = TRUE;
           }
