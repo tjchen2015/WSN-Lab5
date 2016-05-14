@@ -67,7 +67,7 @@ implementation
       if(syncPacket->type == 1){
         if(!radioBusy){
           SyncPacketMsg* broadcastPacket = (SyncPacketMsg*)(call RadioPacket.getPayload(&radioPacket, sizeof (SyncPacketMsg)));
-          call Leds.led0Toggle();
+          call Leds.led2Toggle();
           broadcastPacket -> node_id = NODE_ID;
           broadcastPacket -> type = 2;
           broadcastPacket -> sync_id = syncPacket -> sync_id;//??????
@@ -75,6 +75,7 @@ implementation
 
           if(call RadioAMSend.send(AM_BROADCAST_ADDR, &radioPacket, sizeof(SyncPacketMsg)) == SUCCESS){
             radioBusy = TRUE;
+            call Leds.led0Toggle();
           }
         }
       }
@@ -133,8 +134,6 @@ implementation
 
     return their_time > our_time ? their_time : our_time;
   }
-
-
 
   uint32_t getTimestamp() {
     int i;
