@@ -21,12 +21,15 @@ module ReceiverC @safe()
   uses interface Receive as SerialReceive;
   uses interface AMSend as SerialAMSend;
   uses interface Packet as SerialPacket;
+  uses interface LocalTime<TMilli>;
 }
 implementation
 {
   bool radioBusy = FALSE;
   bool serialBusy = FALSE;
   message_t radioPacket, serialPacket;
+  int sync_packet_storage[MAX_NEIGHBOR_NUM][CACHED_SYNC_PACKET];
+  int sync_id_now[MAX_NEIGHBOR_NUM];
 
   event void Boot.booted()
   {
@@ -107,6 +110,42 @@ implementation
     if(&serialPacket == msg){
       serialBusy = FALSE;
     }
+  }
+
+  void save() {
+    SyncPacket sync_packet;
+    // receiver
+    sync_packet_storage[sync_packet->node_id][sync_packet->sync_id % CACHED_SYNC_PACKET] = sync_packet->timestamp;
+    sync_id_now[sync_packet->node_id] = sync_packet->sync_id;
+  }
+
+  void getTimestamp() {
+
+  }
+
+  void DoLinearRegression(double x[], double y[], int len, double * slope, double * intercept) {
+    int MAXN = 1000;
+    int n = 0;
+
+    // first pass: read in data, compute xbar and ybar
+    double sumx = 0.0, sumy = 0.0, sumx2 = 0.0;
+    for (i = 0; i < len; i += 1) {
+        sumx  += x[i];
+        sumx2 += x[i] * x[i];
+        sumy  += y[i];
+    }
+    double xbar = sumx / len;
+    double ybar = sumy / len;
+
+    // second pass: compute summary statistics
+    double xxbar = 0.0, yybar = 0.0, xybar = 0.0;
+    for (int i = 0; i < len; i++) {
+        xxbar += (x[i] - xbar) * (x[i] - xbar);
+        yybar += (y[i] - ybar) * (y[i] - ybar);
+        xybar += (x[i] - xbar) * (y[i] - ybar);
+    }
+    *slope = xybar / xxbar;
+    *intercept = ybar - beta1 * xbar;
   }
 }
 

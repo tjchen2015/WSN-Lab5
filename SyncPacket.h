@@ -5,7 +5,9 @@
 
 enum {
   AM_SYNCPACKETMSG = 6,
-  TIMER_PERIOD_MILLI = 1000
+  TIMER_PERIOD_MILLI = 1000,
+  CACHED_SYNC_PACKET = 30,
+  MAX_NEIGHBOR_NUM = 10
 };
 
 typedef nx_struct SyncPacketMsg {
