@@ -24,6 +24,7 @@ implementation
 {
   bool busy = FALSE, synced = FALSE, serialBusy = FALSE;
   message_t radioPacket, serialPacket;
+  uint32_t delta;
 
   event void Boot.booted()
   {
@@ -32,7 +33,17 @@ implementation
 
   event void AMControl.startDone(error_t error){
     if (error == SUCCESS){
-      
+      if(!busy && !synced){
+        SyncPacketMsg* broadcastPacket = (SyncPacketMsg*)(call Packet.getPayload(&radioPacket, sizeof (SyncPacketMsg)));
+        call Leds.led2Toggle();
+        broadcastPacket -> node_id = TOS_NODE_ID;
+        broadcastPacket -> timestamp1 = call LocalTime0.get();
+
+        if(call AMSend.send(AM_BROADCAST_ADDR, &radioPacket, sizeof(SyncPacketMsg)) == SUCCESS){
+          busy = TRUE;
+          call Leds.led0Toggle();
+        }
+      }
     }
     else{
       call AMControl.start();
@@ -59,8 +70,8 @@ implementation
         if(!serialBusy){
           SyncPacketMsg* timePacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&serialPacket, sizeof (SyncPacketMsg)));
           timePacket -> node_id = TOS_NODE_ID;
-          // timePacket -> type = 3;
-          // timestamp -> timestamp = ;//????????
+          timePacket -> type = 3;
+          timePacket -> timestamp = call LocalTime0.get() + delta;//????????
           if(call SerialAMSend.send(AM_BROADCAST_ADDR, &serialPacket, sizeof(SyncPacketMsg)) == SUCCESS){
             serialBusy = TRUE;
           }
@@ -78,37 +89,35 @@ implementation
 
   event void AMSend.sendDone(message_t *msg, error_t error){
     if(&radioPacket == msg){
-      call Leds.led1Toggle();
       busy = FALSE;
+      call Leds.led1Toggle();
     }
   }
 
 
   event message_t * AMReceive.receive(message_t *msg, void *payload, uint8_t len){
     if(len == sizeof(SyncPacketMsg)){
-      uint32_t t5 = call LocalTime0.get();
+      uint32_t t8 = call LocalTime0.get();
       SyncPacketMsg* syncPacket = (SyncPacketMsg*)payload;
+      uint32_t t1 = syncPacket->timestamp1;
+      uint32_t t6 = syncPacket->timestamp6;
+      uint32_t t5 = syncPacket->timestamp5;
+      
 
-      if(!busy && !synced){
-        SyncPacketMsg* broadcastPacket = (SyncPacketMsg*)(call Packet.getPayload(&radioPacket, sizeof (SyncPacketMsg)));
-        call Leds.led2Toggle();
-        broadcastPacket -> node_id = TOS_NODE_ID;
-        broadcastPacket -> timestamp5 = t5;
-        broadcastPacket -> timestamp6 = call LocalTime0.get();
-
-        if(call AMSend.send(AM_BROADCAST_ADDR, &radioPacket, sizeof(SyncPacketMsg)) == SUCCESS){
-          busy = TRUE;
-          synced = TRUE;
-          call Timer0.startPeriodic(1000);
-        }
-      }
+      delta = (t8 + t1 - t6 - t5) / 2;
+      synced = TRUE;
+      call Timer0.startPeriodic(5000);
     }
     return msg;
   }
 
   event void Timer0.fired()
   {
-    printf("now time: %d\n", call LocalTime0.get());
+    call Leds.led0Toggle();
+    call Leds.led1Toggle();
+    call Leds.led2Toggle();
+    call Leds.led3Toggle();
+    printf("delta: %d\n", delta);
   }
 
 }

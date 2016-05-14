@@ -59,8 +59,8 @@ implementation
         if(!serialBusy){
           SyncPacketMsg* timePacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&serialPacket, sizeof (SyncPacketMsg)));
           timePacket -> node_id = TOS_NODE_ID;
-          // timePacket -> type = 3;
-          // timestamp -> timestamp = ;//????????
+          timePacket -> type = 3;
+          timePacket -> timestamp = call LocalTime0.get();//????????
           if(call SerialAMSend.send(AM_BROADCAST_ADDR, &serialPacket, sizeof(SyncPacketMsg)) == SUCCESS){
             serialBusy = TRUE;
           }
@@ -108,6 +108,10 @@ implementation
 
   event void Timer0.fired()
   {
+    call Leds.led0Toggle();
+    call Leds.led1Toggle();
+    call Leds.led2Toggle();
+    call Leds.led3Toggle();
     printf("now time: %d\n", call LocalTime0.get());
   }
 
