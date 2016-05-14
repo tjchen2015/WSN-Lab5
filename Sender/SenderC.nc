@@ -24,7 +24,12 @@ implementation
 {
   bool busy = FALSE, synced = FALSE, serialBusy = FALSE;
   message_t radioPacket, serialPacket;
-  uint32_t delta;
+  int delta;
+
+  int32_t t8;
+  int32_t t1;
+  int32_t t6;
+  int32_t t5;
 
   event void Boot.booted()
   {
@@ -72,6 +77,11 @@ implementation
           timePacket -> node_id = TOS_NODE_ID;
           timePacket -> type = 3;
           timePacket -> timestamp = call LocalTime0.get() + delta;//????????
+          timePacket -> delta = delta;
+          timePacket -> timestamp1 = t1;
+          timePacket -> timestamp5 = t5;
+          timePacket -> timestamp6 = t6;
+          timePacket -> timestamp8 = t8;
           if(call SerialAMSend.send(AM_BROADCAST_ADDR, &serialPacket, sizeof(SyncPacketMsg)) == SUCCESS){
             serialBusy = TRUE;
           }
@@ -97,26 +107,26 @@ implementation
 
   event message_t * AMReceive.receive(message_t *msg, void *payload, uint8_t len){
     if(len == sizeof(SyncPacketMsg)){
-      uint32_t t8 = call LocalTime0.get();
-      SyncPacketMsg* syncPacket = (SyncPacketMsg*)payload;
-      uint32_t t1 = syncPacket->timestamp1;
-      uint32_t t6 = syncPacket->timestamp6;
-      uint32_t t5 = syncPacket->timestamp5;
-      
+      if (!synced){
+        SyncPacketMsg* syncPacket;
+        t8 = call LocalTime0.get();
+        syncPacket = (SyncPacketMsg*)payload;
+        t1 = syncPacket->timestamp1;
+        t6 = syncPacket->timestamp6;
+        t5 = syncPacket->timestamp5;
+        
 
-      delta = (t8 + t1 - t6 - t5) / 2;
-      synced = TRUE;
-      call Timer0.startPeriodic(5000);
+        delta = (t8 + t1 - t6 - t5) / 2;
+        synced = TRUE;
+        call Leds.led3Toggle();
+        call Timer0.startPeriodic(5000);
+      }
     }
     return msg;
   }
 
   event void Timer0.fired()
   {
-    call Leds.led0Toggle();
-    call Leds.led1Toggle();
-    call Leds.led2Toggle();
-    call Leds.led3Toggle();
     printf("delta: %d\n", delta);
   }
 

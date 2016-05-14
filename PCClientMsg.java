@@ -7,12 +7,12 @@
 public class PCClientMsg extends net.tinyos.message.Message {
 
     /** The default size of this message type in bytes. */
-    public static final int DEFAULT_MESSAGE_SIZE = 10;
+    public static final int DEFAULT_MESSAGE_SIZE = 26;
 
     /** The Active Message type associated with this message. */
     public static final int AM_TYPE = 6;
 
-    /** Create a new PCClientMsg of size 10. */
+    /** Create a new PCClientMsg of size 26. */
     public PCClientMsg() {
         super(DEFAULT_MESSAGE_SIZE);
         amTypeSet(AM_TYPE);
@@ -91,10 +91,22 @@ public class PCClientMsg extends net.tinyos.message.Message {
         s += "  [type=0x"+Long.toHexString(get_type())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [sync_id=0x"+Long.toHexString(get_sync_id())+"]\n";
+        s += "  [timestamp=0x"+Long.toHexString(get_timestamp())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       try {
-        s += "  [timestamp=0x"+Long.toHexString(get_timestamp())+"]\n";
+        s += "  [timestamp1=0x"+Long.toHexString(get_timestamp1())+"]\n";
+      } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
+      try {
+        s += "  [timestamp5=0x"+Long.toHexString(get_timestamp5())+"]\n";
+      } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
+      try {
+        s += "  [timestamp6=0x"+Long.toHexString(get_timestamp6())+"]\n";
+      } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
+      try {
+        s += "  [timestamp8=0x"+Long.toHexString(get_timestamp8())+"]\n";
+      } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
+      try {
+        s += "  [delta=0x"+Long.toHexString(get_delta())+"]\n";
       } catch (ArrayIndexOutOfBoundsException aioobe) { /* Skip field */ }
       return s;
     }
@@ -103,16 +115,16 @@ public class PCClientMsg extends net.tinyos.message.Message {
 
     /////////////////////////////////////////////////////////
     // Accessor methods for field: node_id
-    //   Field type: short, unsigned
+    //   Field type: short, signed
     //   Offset (bits): 0
     //   Size (bits): 8
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'node_id' is signed (false).
+     * Return whether the field 'node_id' is signed (true).
      */
     public static boolean isSigned_node_id() {
-        return false;
+        return true;
     }
 
     /**
@@ -166,16 +178,16 @@ public class PCClientMsg extends net.tinyos.message.Message {
 
     /////////////////////////////////////////////////////////
     // Accessor methods for field: type
-    //   Field type: short, unsigned
+    //   Field type: short, signed
     //   Offset (bits): 8
     //   Size (bits): 8
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'type' is signed (false).
+     * Return whether the field 'type' is signed (true).
      */
     public static boolean isSigned_type() {
-        return false;
+        return true;
     }
 
     /**
@@ -228,80 +240,17 @@ public class PCClientMsg extends net.tinyos.message.Message {
     }
 
     /////////////////////////////////////////////////////////
-    // Accessor methods for field: sync_id
-    //   Field type: long, unsigned
+    // Accessor methods for field: timestamp
+    //   Field type: long, signed
     //   Offset (bits): 16
     //   Size (bits): 32
     /////////////////////////////////////////////////////////
 
     /**
-     * Return whether the field 'sync_id' is signed (false).
-     */
-    public static boolean isSigned_sync_id() {
-        return false;
-    }
-
-    /**
-     * Return whether the field 'sync_id' is an array (false).
-     */
-    public static boolean isArray_sync_id() {
-        return false;
-    }
-
-    /**
-     * Return the offset (in bytes) of the field 'sync_id'
-     */
-    public static int offset_sync_id() {
-        return (16 / 8);
-    }
-
-    /**
-     * Return the offset (in bits) of the field 'sync_id'
-     */
-    public static int offsetBits_sync_id() {
-        return 16;
-    }
-
-    /**
-     * Return the value (as a long) of the field 'sync_id'
-     */
-    public long get_sync_id() {
-        return (long)getUIntBEElement(offsetBits_sync_id(), 32);
-    }
-
-    /**
-     * Set the value of the field 'sync_id'
-     */
-    public void set_sync_id(long value) {
-        setUIntBEElement(offsetBits_sync_id(), 32, value);
-    }
-
-    /**
-     * Return the size, in bytes, of the field 'sync_id'
-     */
-    public static int size_sync_id() {
-        return (32 / 8);
-    }
-
-    /**
-     * Return the size, in bits, of the field 'sync_id'
-     */
-    public static int sizeBits_sync_id() {
-        return 32;
-    }
-
-    /////////////////////////////////////////////////////////
-    // Accessor methods for field: timestamp
-    //   Field type: long, unsigned
-    //   Offset (bits): 48
-    //   Size (bits): 32
-    /////////////////////////////////////////////////////////
-
-    /**
-     * Return whether the field 'timestamp' is signed (false).
+     * Return whether the field 'timestamp' is signed (true).
      */
     public static boolean isSigned_timestamp() {
-        return false;
+        return true;
     }
 
     /**
@@ -315,14 +264,14 @@ public class PCClientMsg extends net.tinyos.message.Message {
      * Return the offset (in bytes) of the field 'timestamp'
      */
     public static int offset_timestamp() {
-        return (48 / 8);
+        return (16 / 8);
     }
 
     /**
      * Return the offset (in bits) of the field 'timestamp'
      */
     public static int offsetBits_timestamp() {
-        return 48;
+        return 16;
     }
 
     /**
@@ -350,6 +299,321 @@ public class PCClientMsg extends net.tinyos.message.Message {
      * Return the size, in bits, of the field 'timestamp'
      */
     public static int sizeBits_timestamp() {
+        return 32;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: timestamp1
+    //   Field type: long, signed
+    //   Offset (bits): 48
+    //   Size (bits): 32
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'timestamp1' is signed (true).
+     */
+    public static boolean isSigned_timestamp1() {
+        return true;
+    }
+
+    /**
+     * Return whether the field 'timestamp1' is an array (false).
+     */
+    public static boolean isArray_timestamp1() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'timestamp1'
+     */
+    public static int offset_timestamp1() {
+        return (48 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'timestamp1'
+     */
+    public static int offsetBits_timestamp1() {
+        return 48;
+    }
+
+    /**
+     * Return the value (as a long) of the field 'timestamp1'
+     */
+    public long get_timestamp1() {
+        return (long)getUIntBEElement(offsetBits_timestamp1(), 32);
+    }
+
+    /**
+     * Set the value of the field 'timestamp1'
+     */
+    public void set_timestamp1(long value) {
+        setUIntBEElement(offsetBits_timestamp1(), 32, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'timestamp1'
+     */
+    public static int size_timestamp1() {
+        return (32 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'timestamp1'
+     */
+    public static int sizeBits_timestamp1() {
+        return 32;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: timestamp5
+    //   Field type: long, signed
+    //   Offset (bits): 80
+    //   Size (bits): 32
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'timestamp5' is signed (true).
+     */
+    public static boolean isSigned_timestamp5() {
+        return true;
+    }
+
+    /**
+     * Return whether the field 'timestamp5' is an array (false).
+     */
+    public static boolean isArray_timestamp5() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'timestamp5'
+     */
+    public static int offset_timestamp5() {
+        return (80 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'timestamp5'
+     */
+    public static int offsetBits_timestamp5() {
+        return 80;
+    }
+
+    /**
+     * Return the value (as a long) of the field 'timestamp5'
+     */
+    public long get_timestamp5() {
+        return (long)getUIntBEElement(offsetBits_timestamp5(), 32);
+    }
+
+    /**
+     * Set the value of the field 'timestamp5'
+     */
+    public void set_timestamp5(long value) {
+        setUIntBEElement(offsetBits_timestamp5(), 32, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'timestamp5'
+     */
+    public static int size_timestamp5() {
+        return (32 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'timestamp5'
+     */
+    public static int sizeBits_timestamp5() {
+        return 32;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: timestamp6
+    //   Field type: long, signed
+    //   Offset (bits): 112
+    //   Size (bits): 32
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'timestamp6' is signed (true).
+     */
+    public static boolean isSigned_timestamp6() {
+        return true;
+    }
+
+    /**
+     * Return whether the field 'timestamp6' is an array (false).
+     */
+    public static boolean isArray_timestamp6() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'timestamp6'
+     */
+    public static int offset_timestamp6() {
+        return (112 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'timestamp6'
+     */
+    public static int offsetBits_timestamp6() {
+        return 112;
+    }
+
+    /**
+     * Return the value (as a long) of the field 'timestamp6'
+     */
+    public long get_timestamp6() {
+        return (long)getUIntBEElement(offsetBits_timestamp6(), 32);
+    }
+
+    /**
+     * Set the value of the field 'timestamp6'
+     */
+    public void set_timestamp6(long value) {
+        setUIntBEElement(offsetBits_timestamp6(), 32, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'timestamp6'
+     */
+    public static int size_timestamp6() {
+        return (32 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'timestamp6'
+     */
+    public static int sizeBits_timestamp6() {
+        return 32;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: timestamp8
+    //   Field type: long, signed
+    //   Offset (bits): 144
+    //   Size (bits): 32
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'timestamp8' is signed (true).
+     */
+    public static boolean isSigned_timestamp8() {
+        return true;
+    }
+
+    /**
+     * Return whether the field 'timestamp8' is an array (false).
+     */
+    public static boolean isArray_timestamp8() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'timestamp8'
+     */
+    public static int offset_timestamp8() {
+        return (144 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'timestamp8'
+     */
+    public static int offsetBits_timestamp8() {
+        return 144;
+    }
+
+    /**
+     * Return the value (as a long) of the field 'timestamp8'
+     */
+    public long get_timestamp8() {
+        return (long)getUIntBEElement(offsetBits_timestamp8(), 32);
+    }
+
+    /**
+     * Set the value of the field 'timestamp8'
+     */
+    public void set_timestamp8(long value) {
+        setUIntBEElement(offsetBits_timestamp8(), 32, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'timestamp8'
+     */
+    public static int size_timestamp8() {
+        return (32 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'timestamp8'
+     */
+    public static int sizeBits_timestamp8() {
+        return 32;
+    }
+
+    /////////////////////////////////////////////////////////
+    // Accessor methods for field: delta
+    //   Field type: int, signed
+    //   Offset (bits): 176
+    //   Size (bits): 32
+    /////////////////////////////////////////////////////////
+
+    /**
+     * Return whether the field 'delta' is signed (true).
+     */
+    public static boolean isSigned_delta() {
+        return true;
+    }
+
+    /**
+     * Return whether the field 'delta' is an array (false).
+     */
+    public static boolean isArray_delta() {
+        return false;
+    }
+
+    /**
+     * Return the offset (in bytes) of the field 'delta'
+     */
+    public static int offset_delta() {
+        return (176 / 8);
+    }
+
+    /**
+     * Return the offset (in bits) of the field 'delta'
+     */
+    public static int offsetBits_delta() {
+        return 176;
+    }
+
+    /**
+     * Return the value (as a int) of the field 'delta'
+     */
+    public int get_delta() {
+        return (int)getSIntBEElement(offsetBits_delta(), 32);
+    }
+
+    /**
+     * Set the value of the field 'delta'
+     */
+    public void set_delta(int value) {
+        setSIntBEElement(offsetBits_delta(), 32, value);
+    }
+
+    /**
+     * Return the size, in bytes, of the field 'delta'
+     */
+    public static int size_delta() {
+        return (32 / 8);
+    }
+
+    /**
+     * Return the size, in bits, of the field 'delta'
+     */
+    public static int sizeBits_delta() {
         return 32;
     }
 

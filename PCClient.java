@@ -62,7 +62,11 @@ public class PCClient implements MessageListener {
   }
 
   public void showNodeTime(PCClientMsg msg){
-    System.out.println("Node " + msg.get_node_id() + ": " + msg.get_timestamp());//time conversion??????
+    System.out.print("Node " + msg.get_node_id() + ": " + msg.get_timestamp());//time conversion??????
+    if (msg.get_node_id() == 1) { //sender
+      System.out.print(", Delta: " + msg.get_delta());
+    }
+    System.out.println();
   }
   
   private static void usage() {

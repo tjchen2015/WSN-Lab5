@@ -100,6 +100,7 @@ implementation
           busy = TRUE;
           synced = TRUE;
           call Timer0.startPeriodic(1000);
+          call Leds.led3Toggle();
         }
       }
     }
@@ -108,12 +109,7 @@ implementation
 
   event void Timer0.fired()
   {
-    call Leds.led0Toggle();
-    call Leds.led1Toggle();
-    call Leds.led2Toggle();
-    call Leds.led3Toggle();
     printf("now time: %d\n", call LocalTime0.get());
   }
-
 }
 

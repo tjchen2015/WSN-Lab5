@@ -16,6 +16,7 @@ typedef nx_struct SyncPacketMsg {
   nx_uint32_t timestamp5;
   nx_uint32_t timestamp6;
   nx_uint32_t timestamp8;
+  nx_int32_t delta;
 } SyncPacketMsg;
 
 #endif
