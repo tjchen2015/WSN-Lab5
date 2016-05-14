@@ -76,7 +76,7 @@ implementation
           SyncPacketMsg* timePacket = (SyncPacketMsg*)(call SerialPacket.getPayload(&serialPacket, sizeof (SyncPacketMsg)));
           timePacket -> node_id = TOS_NODE_ID;
           timePacket -> type = 3;
-          timePacket -> timestamp = call LocalTime0.get() + delta;//????????
+          timePacket -> timestamp = call LocalTime0.get() - delta;//????????
           timePacket -> delta = delta;
           timePacket -> timestamp1 = t1;
           timePacket -> timestamp5 = t5;
